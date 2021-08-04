@@ -11,7 +11,7 @@ import HttpClient from './network/http.js';
 import TokenStorage from './db/token.js';
 import Socket from './network/socket.js';
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL=process.env.REACT_APP_BASE_URL;
 const authErrorEventBus = new AuthErrorEventBus();
 const tokenStorage = new TokenStorage()
 const httpClient = new HttpClient(baseURL, authErrorEventBus)
