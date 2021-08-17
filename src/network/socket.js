@@ -3,8 +3,8 @@ import socket from 'socket.io-client'
 export default class Socket {
     constructor(baseURL, getAccessToken) {
         this.io = socket(baseURL, {
-            // auth: (callback) => callback({token:getAccessToken()})
-            auth:{token:getAccessToken()}
+            auth: (callback) => callback({token:getAccessToken()})
+            // auth:{token:getAccessToken()}  --- socket cannot be connected
         })
     
         this.io.on('connect_error', (error) => {
@@ -18,9 +18,7 @@ export default class Socket {
         if (!this.io.connected) {
             this.io.connect()
         }
-        this.io.on(event, (message) => {
-            callback(message)
-        })
+        this.io.on(event, (message) => callback(message))
 
         return () => this.io.off(event)
     }

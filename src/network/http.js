@@ -1,7 +1,8 @@
 export default class HttpClient {
-    constructor (baseURL, authErrorEventBus) {
+    constructor (baseURL, authErrorEventBus, getCsrfToken) {
         this.baseURL = baseURL
         this.authErrorEventBus = authErrorEventBus
+        this.getCsrfToken = getCsrfToken
     }
 
     async fetch (url, options) {
@@ -10,7 +11,9 @@ export default class HttpClient {
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers,
-            }
+                '_csrf-token': this.getCsrfToken()
+            },
+            credentials: 'include'
         })
         let data;
         try {
@@ -21,7 +24,7 @@ export default class HttpClient {
 
         if (response.status > 299 || response.status < 200) {
             const message = 
-                data && data.message ? data.message : 'somethine went wrong'
+                data && data.message ? data.message : 'something went wrong'
             const error = new Error(message)
             if (response.status === 401) {
                 this.authErrorEventBus.notify(error)
